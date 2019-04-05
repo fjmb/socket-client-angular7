@@ -1,7 +1,7 @@
+import { Router } from '@angular/router';
 import { Usuario } from "./../modelos/usuario";
 import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
-
 
 @Injectable({
   providedIn: "root"
@@ -10,17 +10,16 @@ export class WebsocketService {
   public socketStatus = false;
   public usuario: Usuario;
 
-  constructor(private socket: Socket) {
+  constructor(private socket: Socket, private router: Router) {
     this.verifyStatus();
     this.cargarStorage();
-
   }
 
   verifyStatus() {
     this.socket.on("connect", () => {
       console.log("Conectado con el servidor");
-
       this.socketStatus = true;
+      this.cargarStorage();
     });
     this.socket.on("disconnect", () => {
       console.log("Desconectado del servidor");
@@ -37,37 +36,40 @@ export class WebsocketService {
   }
 
   loginWs(nombre: string) {
-
-    return new Promise( (resolve  , reject)=>{
-      this.emmit('configurar-usuario',{ nombre }, resp => {
+    return new Promise((resolve, reject) => {
+      this.emmit("configurar-usuario", { nombre }, resp => {
         console.log(resp);
-        this.usuario = new Usuario( nombre );
+        this.usuario = new Usuario(nombre);
         this.guardarStorage();
         resolve();
       });
-    })
+    });
     //console.log("Configurando", nombre);
 
-  /*   this.socket.emit("configurar-usuario", { nombre }, resp => {
+    /*   this.socket.emit("configurar-usuario", { nombre }, resp => {
       console.log(resp);
     }); */
   }
 
-getUsuario(){
-  return this.usuario;
-}
-guardarStorage(){
-  localStorage.setItem('usuario', JSON.stringify(this.usuario))
-}
+  logoutWs() {
+    this.usuario = null;
+    localStorage.removeItem('usuario');
 
-cargarStorage(){
-  if( localStorage.getItem('usuario')){
-    this.usuario = JSON.parse(localStorage.getItem('usuario'));
-    this.loginWs( this.usuario.nombre);
-
+    const payload = {nombre : 'sin-nombre'};
+    this.emmit("configurar-usuario", payload, () =>{});
+    this.router.navigateByUrl('');
   }
-}
+  getUsuario() {
+    return this.usuario;
+  }
+  guardarStorage() {
+    localStorage.setItem("usuario", JSON.stringify(this.usuario));
+  }
 
-
-
+  cargarStorage() {
+    if (localStorage.getItem("usuario")) {
+      this.usuario = JSON.parse(localStorage.getItem("usuario"));
+      this.loginWs(this.usuario.nombre);
+    }
+  }
 }

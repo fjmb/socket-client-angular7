@@ -13,4 +13,7 @@ export class MensajesComponent implements OnInit {
   ngOnInit() {
   }
 
+  cerrarSesion(){
+    this.websocketService.logoutWs();
+  }
 }

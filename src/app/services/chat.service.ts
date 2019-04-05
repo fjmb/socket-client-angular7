@@ -16,9 +16,15 @@ export class ChatService {
    }
 
   getMessages(){
-    return this.websocketService.listenner('messages-new');
+    return this.websocketService.listenner( 'messages-new' );
   }
   getMessagesPrivate(){
-    return this.websocketService.listenner('messages-private');
+    return this.websocketService.listenner( 'messages-private' );
+  }
+  getUsuariosActivos(){
+    return this.websocketService.listenner( 'actives-users' );
+  }
+  emitUsuariosActivos(){
+    return this.websocketService.emmit( 'obtener-usuarios' );
   }
 }
