@@ -14,6 +14,7 @@ import { MensajesComponent } from './pages/mensajes/mensajes.component';
 import { GraficaComponent } from './components/grafica/grafica.component';
 import { ChartsModule } from 'ng2-charts';
 import {HttpClientModule } from '@angular/common/http';
+import { EncuestaComponent } from './components/encuesta/encuesta.component';
 
  const config: SocketIoConfig = {
   url: environment.webSocketUrl, options: {}
@@ -27,7 +28,8 @@ import {HttpClientModule } from '@angular/common/http';
     ListaUsuariosComponent,
     LoginComponent,
     MensajesComponent,
-    GraficaComponent
+    GraficaComponent,
+    EncuestaComponent
   ],
   imports: [
     BrowserModule,
